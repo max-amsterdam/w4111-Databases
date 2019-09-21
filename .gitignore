@@ -1,1 +1,9 @@
 /HW_Solutions
+*.DS_Store
+*.vscode
+/__pycache__
+*.env
+*.un~
+*~
+*.code-workspace
+*.pyc

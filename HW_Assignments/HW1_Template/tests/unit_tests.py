@@ -15,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 
 # This should also be an environment variable.
 # Also not the using '/' is OS dependent, and windows might need `\\`
-data_dir = os.path.abspath("../Data/Baseball")
+data_dir = os.path.abspath("Data/Baseball")
 
 
 def t_load():
