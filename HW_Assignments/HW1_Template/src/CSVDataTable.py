@@ -85,6 +85,16 @@ class CSVDataTable(BaseDataTable):
 
         self._logger.debug("CSVDataTable._load: Loaded " + str(len(self._rows)) + " rows")
 
+    def get_fields_for_row(self, row, field_list):
+        if not field_list:
+            return row
+        else:
+            d = dict()
+            for field in field_list:
+                if field in row:
+                    d[field] = row[field]
+            return d
+
     def save(self):
         """
         Write the information back to a file.
@@ -111,7 +121,35 @@ class CSVDataTable(BaseDataTable):
         :return: None, or a dictionary containing the requested fields for the record identified
             by the key.
         """
-        pass
+        if type(key_fields) != list:
+            raise DataTableException('Key Fields must be a list')
+
+        result = []
+        key_columns = self._data['key_columns']
+        
+        if not key_columns:
+            raise DataTableException('This table does not have a primary key')
+
+        if len(key_fields) != len(key_columns):
+            raise DataTableException('The number of key fields must match the numebr of keys that make up the primary key')
+
+        for r in self._rows:
+            matches = True
+            for i in range(len(key_columns)):
+                if r[key_columns[i]] != key_fields[i]:
+                    matches = False
+                    break
+            if matches:
+                result.append(r)
+
+        if len(result) == 0:
+            return None
+        if len(result) > 1:
+            raise DataTableException('Data is not valid. A primary key should only match one row exactly.')
+        else:
+            return self.get_fields_for_row(result[0], field_list)
+
+
 
     def find_by_template(self, template, field_list=None, limit=None, offset=None, order_by=None):
         """
@@ -124,7 +162,17 @@ class CSVDataTable(BaseDataTable):
         :return: A list containing dictionaries. A dictionary is in the list representing each record
             that matches the template. The dictionary only contains the requested fields.
         """
-        pass
+
+        if type(template) != dict:
+            raise DataTableException('Template must be a dictionary.')
+
+        result = list()
+
+        for r in self._rows:
+            if self.matches_template(r, template):
+                result.append(self.get_fields_for_row(r, field_list))
+
+        return result
 
     def delete_by_key(self, key_fields):
         """
@@ -134,7 +182,14 @@ class CSVDataTable(BaseDataTable):
         :param template: A template.
         :return: A count of the rows deleted.
         """
-        pass
+        row_to_delete = self.find_by_primary_key(key_fields)
+
+        if not row_to_delete:
+            return 0 
+
+        self._rows.remove(row_to_delete)
+        return 1
+
 
     def delete_by_template(self, template):
         """
@@ -142,7 +197,13 @@ class CSVDataTable(BaseDataTable):
         :param template: Template to determine rows to delete.
         :return: Number of rows deleted.
         """
-        pass
+        rows_to_delete = self.find_by_template(template)
+
+        num_deleted = 0
+        for row in rows_to_delete:
+            self._rows.remove(row)
+            num_deleted += 1
+        return num_deleted
 
     def update_by_key(self, key_fields, new_values):
         """
@@ -151,6 +212,25 @@ class CSVDataTable(BaseDataTable):
         :param new_values: A dict of field:value to set for updated row.
         :return: Number of rows updated.
         """
+        if type(new_values) != dict:
+            raise DataTableException('new_values must be a dictionary')
+
+
+        # The actual updating
+        row_to_update = self.find_by_primary_key(key_fields)
+        if not row_to_update:
+            return 0 
+
+        row_index = self._rows.index(row_to_update)
+        curr_row_copy = self._rows[row_index].copy()
+        for field, value in new_values.items():
+            if field in curr_row_copy:
+                curr_row_copy[field] = value
+        if self.update_creates_duplicate_primary_key(new_values, curr_row_copy):
+            raise DuplicatePrimaryKeyException
+        else:
+            self._rows[row_index] = curr_row_copy
+        return 1
 
     def update_by_template(self, template, new_values):
         """
@@ -159,7 +239,48 @@ class CSVDataTable(BaseDataTable):
         :param new_values: New values to set for matching fields.
         :return: Number of rows updated.
         """
-        pass
+        rows_to_update = self.find_by_template(template)
+
+        if type(new_values) != dict:
+            raise DataTableException('new_values must be a dictionary')
+
+        num_updated = 0
+        for row in rows_to_update:
+            row_index = self._rows.index(row)
+            curr_row_copy = self._rows[row_index].copy()
+            for field, value in new_values.items():
+                if field in curr_row_copy:
+                    curr_row_copy[field] = value
+            if self.update_creates_duplicate_primary_key(new_values, curr_row_copy):
+                raise DuplicatePrimaryKeyException
+            else:
+                self._rows[row_index] = curr_row_copy
+            num_updated += 1
+
+        return num_updated
+
+    def update_creates_duplicate_primary_key(self, new_values, row):
+        key_columns = self._data['key_columns']
+        if not key_columns:
+            # No primary key in this table
+            return False
+        key_fields = list()
+
+        updated_a_key = False 
+        for key_column in key_columns:
+            if key_column in new_values:
+                updated_a_key = True
+                break
+
+        # Only check if the update involved changing a key
+        if updated_a_key:
+            for key_column in key_columns:
+                key_fields.append(row[key_column])
+
+            if self.find_by_primary_key(key_fields):
+                return True
+
+        return False
 
     def insert(self, new_record):
         """
@@ -167,8 +288,44 @@ class CSVDataTable(BaseDataTable):
         :param new_record: A dictionary representing a row to add to the set of records.
         :return: None
         """
-        pass
+        # Checks to make sure the new record has all the necessary fields, and no more
+        if not self.matches_columns(new_record):
+            raise DataTableException('new_record must contain the exact fields of the table.')
+
+        if self.insert_creates_duplicate_primary_key(new_record):
+            raise DuplicatePrimaryKeyException('This insert would lead to a duplicate primary key')
+
+        self._rows.append(new_record)
+
+
+    def insert_creates_duplicate_primary_key(self, row):
+        key_columns = self._data['key_columns']
+        if key_columns is None:
+            return False
+
+        key_fields = list()
+
+        for key_column in key_columns:
+            key_fields.append(row[key_column])
+
+        if self.find_by_primary_key(key_fields):
+            return True
+        return False
+
+
+    def matches_columns(self, row):
+        correct_row = self._rows[0]
+        for field in correct_row.keys():
+            if field not in row:
+                return False
+        return len(row) == len(correct_row)  # Makes sure the row doesn't have extra columns
+
 
     def get_rows(self):
         return self._rows
 
+class DataTableException(Exception):
+    pass
+
+class DuplicatePrimaryKeyException(Exception):
+    pass
