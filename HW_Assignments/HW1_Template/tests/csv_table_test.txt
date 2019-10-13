@@ -1,0 +1,67 @@
+DEBUG:root:CSVDataTable.__init__: data = {
+  "table_name": "people",
+  "connect_info": {
+    "directory": "/Users/maxamsterdam/Library/CloudStorage/iCloudDrive/Documents/School/Junior_Sem_I/Databases/w4111-Databases/HW_Assignments/HW1_Template/Data/Baseball",
+    "file_name": "People.csv"
+  },
+  "key_columns": null,
+  "debug": true
+}
+DEBUG:root:CSVDataTable._load: Loaded 19617 rows
+DEBUG:root:CSVDataTable.__init__: data = {
+  "table_name": "people",
+  "connect_info": {
+    "directory": "/Users/maxamsterdam/Library/CloudStorage/iCloudDrive/Documents/School/Junior_Sem_I/Databases/w4111-Databases/HW_Assignments/HW1_Template/Data/Baseball",
+    "file_name": "People.csv"
+  },
+  "key_columns": [
+    "playerID"
+  ],
+  "debug": true
+}
+DEBUG:root:CSVDataTable._load: Loaded 19617 rows
+TEST PASSED: find_by_template_good
+TEST PASSED: find_by_template_field_list_good
+TEST PASSED: find_by_template_bad
+TEST PASSED: find_by_template_empty
+TEST PASSED: find_by_primary_key_good
+TEST PASSED: find_by_primary_key_does_not_exist
+TEST PASSED: find_by_primary_key_field_list_good
+TEST PASSED: find_by_primary_key_bad_type
+TEST PASSED: find_by_primary_key_bad_key_fields
+TEST PASSED: delete_by_key_good
+TEST PASSED: delete_by_key_does_not_exist
+TEST PASSED: delete_by_template_good
+TEST PASSED: delete_by_template_empty
+DEBUG:root:CSVDataTable.__init__: data = {
+  "table_name": "people",
+  "connect_info": {
+    "directory": "/Users/maxamsterdam/Library/CloudStorage/iCloudDrive/Documents/School/Junior_Sem_I/Databases/w4111-Databases/HW_Assignments/HW1_Template/Data/Baseball",
+    "file_name": "People.csv"
+  },
+  "key_columns": null,
+  "debug": true
+}
+DEBUG:root:CSVDataTable._load: Loaded 19617 rows
+DEBUG:root:CSVDataTable.__init__: data = {
+  "table_name": "people",
+  "connect_info": {
+    "directory": "/Users/maxamsterdam/Library/CloudStorage/iCloudDrive/Documents/School/Junior_Sem_I/Databases/w4111-Databases/HW_Assignments/HW1_Template/Data/Baseball",
+    "file_name": "People.csv"
+  },
+  "key_columns": [
+    "playerID"
+  ],
+  "debug": true
+}
+DEBUG:root:CSVDataTable._load: Loaded 19617 rows
+TEST PASSED: update_by_key_good
+TEST PASSED: update_by_key_bad_type
+TEST PASSED: update_by_key_does_not_exist
+TEST PASSED: update_by_key_duplicate
+TEST PASSED: update_by_template_good
+TEST PASSED: update_by_template_does_not_exist
+TEST PASSED: update_by_key_duplicate
+TEST PASSED: insert_good
+TEST PASSED: insert_bad_record
+TEST PASSED: insert_duplicate_primary_key

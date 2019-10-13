@@ -1,0 +1,61 @@
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'NYN' AND SB = '1'
+TEST PASSED: find_by_template_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT teamID, SB, playerID, G, AB, R FROM Batting WHERE teamID = 'NYN' AND SB = '1'
+TEST PASSED: find_by_template_field_list_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'DOESNOTEXISTTEAM' AND SB = '1'
+TEST PASSED: find_by_template_empty
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2011' AND stint = '1' AND teamID = 'HOU'
+TEST PASSED: find_by_primary_key_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT playerID, G, AB, R FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2010' AND stint = '1' AND teamID = 'HOU'
+TEST PASSED: find_by_primary_key_field_list_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'non-existent player id' AND yearID = '2014' AND stint = '1' AND teamID = 'OAK'
+TEST PASSED: find_by_primary_key_does_not_exist
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT doesnotexist, a;jlsdkfj, 00, a;lkj FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2014' AND stint = '1' AND teamID = 'OAK'
+TEST PASSED: find_by_primary_key_bad_field_list
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = DELETE FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2013' AND stint = '1' AND teamID = 'WAS'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2013' AND stint = '1' AND teamID = 'WAS'
+TEST PASSED: delete_by_key_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = DELETE FROM Batting WHERE playerID = 'DOESNOTEXIST ' AND yearID = '2017' AND stint = '1' AND teamID = 'BOS'
+TEST PASSED: delete_by_key_does_not_exist
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'NYN' AND SB = '2'
+DEBUG:root:Executing SQL = DELETE FROM Batting WHERE teamID = 'NYN' AND SB = '2'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'NYN' AND SB = '2'
+TEST PASSED: delete_by_template_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = DELETE FROM Batting WHERE playerID = 'DOESNOTEXIST ' AND yearID = '2016' AND stint = '2' AND teamID = 'BOS'
+TEST PASSED: delete_by_key_does_not_exist
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = UPDATE Batting SET G = '1000', H = '10000' WHERE playerID = 'abadfe01' AND yearID = '2016' AND stint = '1' AND teamID = 'MIN'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01' AND yearID = '2016' AND stint = '1' AND teamID = 'MIN'
+TEST PASSED: update_by_key_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = UPDATE Batting SET G = '1000', H = '10000' WHERE playerID = 'DOESNOTEXIST' AND yearID = '2014' AND stint = '1' AND teamID = 'OAK'
+TEST PASSED: update_by_key_does_not_exist
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = UPDATE Batting SET playerID = 'abadfe01', yearID = '2015', stint = '1', teamID = 'OAK' WHERE playerID = 'abadfe01' AND yearID = '2012' AND stint = '1' AND teamID = 'HOU'
+TEST PASSED: update_by_key_duplicate
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'NYN' AND SB = '1'
+DEBUG:root:Executing SQL = UPDATE Batting SET G = '1000', H = '10000' WHERE teamID = 'NYN' AND SB = '1'
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE teamID = 'NYN' AND SB = '1'
+TEST PASSED: update_by_template_good
+DEBUG:root:Executing SQL = UPDATE Batting SET G = '1000', H = '10000' WHERE teamID = 'DOESNOTEXIST' AND SB = '1'
+TEST PASSED: update_by_template_does_not_exist
+DEBUG:root:Executing SQL = UPDATE Batting SET playerID = '1234', yearID = '2012', stint = '1', teamID = 'NYN' WHERE teamID = 'NYN' AND H = '1'
+TEST PASSED: update_by_template_duplicate
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = INSERT INTO Batting (playerID, yearID, stint, teamID, lgID, G, AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, IBB, HBP, SH, SF, GIDP) VALUES ('1234567', '2000', '1', 'NYN', 'NL', '79', '157', '22', '34', '7', '1', '6', '12', '1', '1', '14', '51', '2', '1', '0', '1', '2')
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = '1234567' AND yearID = '2000' AND stint = '1' AND teamID = 'NYN'
+TEST PASSED: insert_good
+DEBUG:root:Executing SQL = SELECT * FROM Batting WHERE playerID = 'abadfe01'
+DEBUG:root:Executing SQL = INSERT INTO Batting (playerID, yearID, stint, teamID, lgID, G, AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, IBB, HBP, SH, SF, GIDP) VALUES ('abbotku01', '2000', '1', 'NYN', 'NL', '79', '157', '22', '34', '7', '1', '6', '12', '1', '1', '14', '51', '2', '1', '0', '1', '2')
+TEST PASSED: insert_duplicate_primary_key
